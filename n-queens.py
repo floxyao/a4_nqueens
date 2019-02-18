@@ -5,27 +5,26 @@ Created on Sun Feb 17 18:27:41 2019
 
 @author: flo
 """
-import numpy as np
-import random
 
-#class Map:
-#    def __init__(self, width, height):     
-#        self.dirty = [[random.randint(0, 1) for i in range(width)] for j in range(height)] #nested loop
-#        
-#    def show(self):
-#        print(np.matrix(self.dirty))
+import random
 
 class solveQueens:
     def __init__(self, _numQueens, _numStates):
         self.numQueens = _numQueens
         self.numStates = _numStates
         self.board = []
+        
+        #init queens with position
         for i in range(self.numQueens):
             self.board.append([None] * self.numQueens)
             #print(i, self.board[i])
             #print(self.board[i])
             #self.board[i][j] = elt
         
+    #===================================================
+    #prints board
+    # *CURRENTLY NOT IN THE RIGHT FORMAT*
+    #===================================================
     def show(self, positions):
         i = 0
         for array in self.board:
@@ -33,18 +32,23 @@ class solveQueens:
             i += 1
             array[elt] = elt
             print(array)
-            
-            
+        
+    #===================================================
+    #returns fitness of an individual
+    #inputs: array of integers (position of each queen)
+    #===================================================
     def fitnessFunction(self, positions):
         qpos = [] #array of queen positions
         pairs = 0
         
+        #insert all positions in (x,y) form in an array "qpos" 
         for i in range(len(positions)):
             x = i
             y = positions[i]
             qpos.append((x,y))
         print(qpos)
         
+        #compare each pair with each other for collisions
         k=len(positions)-1
         for i in range(len(qpos)):
             #print ("i",i)
@@ -64,6 +68,10 @@ class solveQueens:
         
         return pairs
     
+    #===================================================
+    #detects horizontal/vertical/diagonal alignment
+    #input(s): a position (x,y)
+    #===================================================
     def collision(self, q1, q2):
         return (abs(q2[0]-q1[0]) == abs(q2[1]-q1[1])) or (q1[0] == q2[0]) or (q1[1] == q2[1])
     
