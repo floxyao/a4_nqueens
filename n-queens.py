@@ -7,20 +7,34 @@ Created on Sun Feb 17 18:27:41 2019
 """
 
 import random
+import math
+import collections
 
 class solveQueens:
     def __init__(self, _numQueens, _numStates):
         self.numQueens = _numQueens
         self.numStates = _numStates
-        self.board = []
         
+        self.board = []
         #init queens with position
         for i in range(self.numQueens):
             self.board.append([None] * self.numQueens)
             #print(i, self.board[i])
             #print(self.board[i])
             #self.board[i][j] = elt
+            
+        self.population = [[]]
+        for i in range(self.numStates):
+            for j in range(self.numQueens):
+                self.population[i].append(random.randint(0, self.numQueens))
+            if i != self.numStates-1:
+                self.population.append([])
+        print(self.population)
+
         
+
+#        for array in self.population:
+#            print(array, end=' ')
     #===================================================
     #prints board
     # *CURRENTLY NOT IN THE RIGHT FORMAT*
@@ -32,7 +46,7 @@ class solveQueens:
             i += 1
             array[elt] = elt
             print(array)
-        
+            
     #===================================================
     #returns fitness of an individual
     #inputs: array of integers (position of each queen)
@@ -46,27 +60,63 @@ class solveQueens:
             x = i
             y = positions[i]
             qpos.append((x,y))
-        print(qpos)
+        #print('qpos: ',qpos)
         
         #compare each pair with each other for collisions
         k=len(positions)-1
         for i in range(len(qpos)):
             #print ("i",i)
-            queen1 = (qpos[i][0],qpos[i][1])
-            print(queen1)
+            queen1 = (qpos[i][0] , qpos[i][1])
+            #print(queen1)
             for j in range(k):
                 j += i+1
                 #print("j: ",j)
-                queen2 = (qpos[j][0],qpos[j][1])
-                print(queen2)
-                if(self.collision(queen1,queen2)):
-                    print("colliding pairs: ",queen1,queen2)
-                else:
+                queen2 = (qpos[j][0] , qpos[j][1])
+                #print(queen2)
+                if(self.collision(queen1,queen2) == False):
                     pairs += 1;
             if(i==(len(positions)-1)): break
             k -= 1
         
         return pairs
+    
+    def geneticAlgorithm(self):
+        goal = self.nCr(self.numQueens, 2)
+        fitPercents = []
+        allScores = []
+        
+        
+        #while(True)
+        
+        
+        #calculate sum of all fitness scores
+        for i in range(len(self.population)):
+            allScores.append(self.fitnessFunction(self.population[i]))
+        
+        print('allScores: ',allScores)
+        total = sum(allScores)
+        
+        #insert list of tuples of (fitness percentage and individual)
+        for j in range(len(self.population)):
+            fitScore = allScores[j]
+            
+            fitPercents.append((round((fitScore / total),2) , self.population[j]))
+            print(fitPercents[j])
+        
+        #x, y = cross_over
+
+        #new_population = getNextPopulation();
+        
+        #self.population = new_population
+        
+        
+    
+        print("out of loop")
+            
+    def nCr(self, n,r):
+        f = math.factorial
+        return int(f(n) / f(r) / f(n-r))
+        
     
     #===================================================
     #detects horizontal/vertical/diagonal alignment
@@ -86,18 +136,25 @@ class solveQueens:
     
 if __name__ == '__main__':
     print("\n")
-    q = solveQueens(4,0)
+    q = solveQueens(4,4)
     
-    pos = []
-    for i in range(4):
-        pos.append(random.randint(0, 3))
-        print(pos[i])
+#    population = q.getpopulation
     
-    print("\n")
+    
+#    pos = []
+#    for i in range(4):
+#        pos.append(random.randint(0, 3))
+#        print(pos[i])
+    
+    #get population
+    
+    pos = q.geneticAlgorithm();
         
-    q.show(pos)    
-    fitness = q.fitnessFunction(pos)
-    print(fitness)
+    #q.show(pos)    
+    
+    #fitness = q.fitnessFunction(pos)
+    #print(fitness)
 #    q.placeQueens()
+
 
     
